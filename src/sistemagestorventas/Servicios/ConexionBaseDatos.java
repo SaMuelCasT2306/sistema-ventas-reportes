@@ -6,19 +6,23 @@ import java.sql.SQLException;
 
 public class ConexionBaseDatos {
     
+    //Atributos
     private String cadenaConexion;
     private String usuario;
     private String clave;
 
+    //Constructor
     public ConexionBaseDatos(String cadenaConexion, String usuario, String clave) {
         this.cadenaConexion = cadenaConexion;
         this.usuario = usuario;
         this.clave = clave;
     }
 
+    //Constructor vacio
     public ConexionBaseDatos() {
     }
 
+    //Setters
     public void setCadenaConexion(String cadenaConexion) {
         this.cadenaConexion = cadenaConexion;
     }
@@ -31,7 +35,8 @@ public class ConexionBaseDatos {
         this.clave = clave;
     }
     
-   public Connection conexion() throws SQLException {
+    //Metodo de conexión a BD
+    public Connection conexion() throws SQLException {
        
        if (usuario != null && clave != null){
            return DriverManager.getConnection(cadenaConexion,usuario,clave);

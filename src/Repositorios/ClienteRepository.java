@@ -1,13 +1,116 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Repositorios;
 
-/**
- *
- * @author Samuel Castillo
- */
+import java.sql.SQLException;
+import java.sql.PreparedStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
+
+import Modelos.Cliente;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import sistemagestorventas.Servicios.ConexionBaseDatos;
+
 public class ClienteRepository {
+    
+    //atributos conexion DB
+    private ConexionBaseDatos db;
+    
+    //Constructor 
+    public ClienteRepository(ConexionBaseDatos db) {
+        this.db = db;
+    }
+    
+    //Metodos INSERT cliente 
+    public void insertarCliente (Cliente c) throws SQLException {
+        
+        //Asignar query con placeholders (?)
+        String sql = "INSERT INTO Cliente (ruc, nombre, direccion) VALUES (?, ?, ?)";
+        
+        //try (abre la conexion a la base de datos, y abrir prepared statements que se encarga de ejecutar la query y devolver la PK generadas)
+        try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+            
+            //reemplazar placeholders
+            ps.setInt(1, c.getRuc());
+            ps.setString(2, c.getNombre());
+            ps.setString(3, c.getDireccion());
+            
+            //Ejecutar query
+            ps.executeUpdate();
+            
+            //try (para recuperar los ids creados por la BD)
+            try (ResultSet rs = ps.getGeneratedKeys()){
+                
+                if (rs.next()){
+                    //obtener el id en la columna 1
+                    c.setId(rs.getInt(1));
+                }else{
+                    throw new SQLException("No se pudo obtener el ID Generado para el cliente");
+                }
+                
+            }
+            
+        }
+        
+    } 
+    
+    public void updateCliente (Cliente c) throws SQLException{
+        
+        String sql = "UPDATE Cliente SET ruc=?, nombre=?, direccion=? WHERE idCliente=?";
+        
+        try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql)){
+            
+            ps.setInt(1, c.getRuc());
+            ps.setString(2, c.getNombre());
+            ps.setString(3, c.getDireccion());
+            ps.setInt(4, c.getId());
+            int filas = ps.executeUpdate();
+            
+            if (filas >= 1){
+                System.out.println("Se actualizo " + filas + " filas correctamente");
+            }else{
+                throw new SQLException("No se encontro el ID del cliente");
+            }
+            
+        }
+        
+        
+    }
+    
+    public void deleteCliente(Cliente e)throws SQLException{
+        
+        String sql = "DELETE FROM Cliente WHERE idCliente = ?;";
+        
+        try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql)){
+            ps.setInt(1, e.getId());
+            int filas = ps.executeUpdate();
+            
+            if (filas >= 1){
+                System.out.println("Se elimino " + filas + " filas correctamente");
+            }else{
+                throw new SQLException("No se encontro el ID del cliente");
+            }
+        }
+        
+    }
+    
+    public List<Cliente> listarClientes() throws SQLException{
+        
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT idCliente, ruc, nombre, direccion FROM Cliente ORDER BY nombre";
+        
+        try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql);ResultSet rs = ps.executeQuery()){
+            while (rs.next()){
+                Cliente cliente = new Cliente();
+                cliente.setId(rs.getInt(1));
+                cliente.setRuc(rs.getInt(2));
+                cliente.setNombre(rs.getString(3));
+                cliente.setDireccion(rs.getString(4));
+                clientes.add(cliente);
+            }
+        }
+        return clientes;
+    }
     
 }
