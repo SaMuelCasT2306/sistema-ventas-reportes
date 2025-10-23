@@ -55,7 +55,7 @@ public class ProductoRepository {
         
     } 
     
-    public void updateCliente (Producto p) throws SQLException{
+    public void updateProducto (Producto p) throws SQLException{
         
         String sql = "UPDATE Cliente SET codigo=?, nombre=?, precioUnitario=? WHERE idProducto=?";
         
@@ -75,7 +75,7 @@ public class ProductoRepository {
         } 
     }
     
-    public void deleteCliente(Producto p)throws SQLException{
+    public void deleteProducto (Producto p)throws SQLException{
         
         String sql = "DELETE FROM Producto WHERE idProducto = ?;";
         
