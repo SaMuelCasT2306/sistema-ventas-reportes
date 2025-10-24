@@ -10,6 +10,8 @@ import com.poo.edu.utp.ingenieria.sistemaventas.utilidades.Reportes;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 
 public class EduUtpIngenieriaSistemaventas {
 
@@ -27,6 +29,10 @@ public class EduUtpIngenieriaSistemaventas {
         Producto p = new Producto(1, "P002", "PS5", (float) 45.25);
 
         try {
+            
+            Date fechaActual = new Date();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyMMdd_HHmmss");
+            String fechaArchivo = sdf.format(fechaActual);
 
             /*
             cr.insertarCliente(c);
@@ -47,11 +53,11 @@ public class EduUtpIngenieriaSistemaventas {
             cr.imprimirListaClientes(listaClientes);
 
             String rutaPlantilla = "C:\\Test\\plantilla_reporte.xlsx";
-            String rutaSalida = "C:\\Test\\Output\\reporte.xlsx";
+            String rutaSalida = "C:\\Test\\Output\\reporte_" + fechaArchivo + ".xlsx";
 
-            Reportes.crearReportes(rutaPlantilla, rutaSalida, listaProductos);
+            Reportes.crearReportesProductos(rutaPlantilla, rutaSalida, listaProductos);
 
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.err.println("Error: " + e.getMessage());
             e.printStackTrace();
         }
