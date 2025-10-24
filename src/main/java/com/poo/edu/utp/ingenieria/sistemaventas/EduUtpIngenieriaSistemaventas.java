@@ -5,7 +5,10 @@ import com.poo.edu.utp.ingenieria.sistemaventas.modelos.Producto;
 import com.poo.edu.utp.ingenieria.sistemaventas.repositorios.ClienteRepository;
 import com.poo.edu.utp.ingenieria.sistemaventas.repositorios.ProductoRepository;
 import com.poo.edu.utp.ingenieria.sistemaventas.servicios.ConexionBaseDatos;
+import com.poo.edu.utp.ingenieria.sistemaventas.utilidades.Reportes;
+
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EduUtpIngenieriaSistemaventas {
@@ -42,6 +45,11 @@ public class EduUtpIngenieriaSistemaventas {
 
             List<Cliente> listaClientes = cr.listarClientes();
             cr.imprimirListaClientes(listaClientes);
+
+            String rutaPlantilla = "C:\\Test\\plantilla_reporte.xlsx";
+            String rutaSalida = "C:\\Test\\Output\\reporte.xlsx";
+
+            Reportes.crearReportes(rutaPlantilla, rutaSalida, listaProductos);
 
         } catch (SQLException e) {
             System.err.println("Error: " + e.getMessage());
