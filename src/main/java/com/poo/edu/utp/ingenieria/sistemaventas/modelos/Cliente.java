@@ -4,12 +4,12 @@ public class Cliente {
     
     //
     private int id;
-    private int ruc;
+    private long ruc;
     private String nombre;
     private String direccion;
 
     //
-    public Cliente(int id, int ruc, String nombre, String direccion) {
+    public Cliente(int id, long ruc, String nombre, String direccion) {
         this.id = id;
         this.ruc = ruc;
         this.nombre = nombre;
@@ -24,7 +24,7 @@ public class Cliente {
         return id;
     }
 
-    public int getRuc() {
+    public long getRuc() {
         return ruc;
     }
 
@@ -41,7 +41,7 @@ public class Cliente {
         this.id = id;
     }
 
-    public void setRuc(int ruc) {
+    public void setRuc(long ruc) {
         this.ruc = ruc;
     }
 

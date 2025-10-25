@@ -32,7 +32,7 @@ public class ClienteRepository {
         try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             
             //reemplazar placeholders
-            ps.setInt(1, c.getRuc());
+            ps.setLong(1, c.getRuc());
             ps.setString(2, c.getNombre());
             ps.setString(3, c.getDireccion());
             
@@ -61,7 +61,7 @@ public class ClienteRepository {
         
         try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql)){
             
-            ps.setInt(1, c.getRuc());
+            ps.setLong(1, c.getRuc());
             ps.setString(2, c.getNombre());
             ps.setString(3, c.getDireccion());
             ps.setInt(4, c.getId());
@@ -101,7 +101,7 @@ public class ClienteRepository {
             while (rs.next()){
                 Cliente cliente = new Cliente();
                 cliente.setId(rs.getInt(1));
-                cliente.setRuc(rs.getInt(2));
+                cliente.setRuc(rs.getLong(2));
                 cliente.setNombre(rs.getString(3));
                 cliente.setDireccion(rs.getString(4));
                 clientes.add(cliente);
