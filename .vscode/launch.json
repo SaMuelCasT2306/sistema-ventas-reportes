@@ -17,8 +17,8 @@
             "request": "launch",
             "mainClass": "com.poo.edu.utp.ingenieria.sistemaventas.EduUtpIngenieriaSistemaventas",
             "projectName": "edu.utp.ingenieria.sistemaventas",
-            //"vmArgs": "-Djava.library.path=\"C:\\PROY_SA\\edu.utp.ingenieria.sistemaventas\\lib\\windows\\x64\"",
-            "vmArgs": "-Djava.library.path=\"C:\\Proyectos_Samuel\\Java_proyectos\\sistema-ventas-reportes\\lib\\windows\\x64\""
+            "vmArgs": "-Djava.library.path=\"C:\\PROY_SA\\edu.utp.ingenieria.sistemaventas\\lib\\windows\\x64\""
+            //"vmArgs": "-Djava.library.path=\"C:\\Proyectos_Samuel\\Java_proyectos\\sistema-ventas-reportes\\lib\\windows\\x64\""
         }
     ]
 }

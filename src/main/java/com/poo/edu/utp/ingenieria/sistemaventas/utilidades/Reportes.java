@@ -2,6 +2,8 @@ package com.poo.edu.utp.ingenieria.sistemaventas.utilidades;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.poo.edu.utp.ingenieria.sistemaventas.modelos.Cliente;
 import com.poo.edu.utp.ingenieria.sistemaventas.modelos.Producto;
 import java.io.FileInputStream;
 import java.text.DecimalFormat;
@@ -17,7 +19,7 @@ public class Reportes {
 
         try (FileInputStream fis = new FileInputStream(rutaPlantilla); Workbook workbook = new XSSFWorkbook(fis)) {
 
-            //Definir fecha actual
+            // Definir fecha actual
             Date fechaActual = new Date();
             SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
             String fechaFormateada = formatoFecha.format(fechaActual);
@@ -43,7 +45,7 @@ public class Reportes {
             Cell cellEmpresa = rowEmpresa.createCell(2);
             cellEmpresa.setCellValue("TEC.SAC");
 
-            //Insertar fecha actual
+            // Insertar fecha actual
             Row rowFecha = sheet.getRow(3);
             Cell cellFecha = rowFecha.createCell(2);
             cellFecha.setCellValue(fechaFormateada);
@@ -86,5 +88,7 @@ public class Reportes {
         }
 
     }
+
+    
 
 }

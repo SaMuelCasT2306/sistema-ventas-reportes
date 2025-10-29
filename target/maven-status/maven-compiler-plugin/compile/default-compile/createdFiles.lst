@@ -3,6 +3,8 @@ com\poo\edu\utp\ingenieria\sistemaventas\repositorios\DetalleFacturaRepository.c
 com\poo\edu\utp\ingenieria\sistemaventas\repositorios\EmpresaRepository.class
 com\poo\edu\utp\ingenieria\sistemaventas\EduUtpIngenieriaSistemaventas.class
 com\poo\edu\utp\ingenieria\sistemaventas\modelos\Factura.class
+com\poo\edu\utp\ingenieria\sistemaventas\dto\FacturaProducto.class
+com\poo\edu\utp\ingenieria\sistemaventas\utilidades\Configuracion.class
 com\poo\edu\utp\ingenieria\sistemaventas\modelos\Cliente.class
 com\poo\edu\utp\ingenieria\sistemaventas\servicios\ConexionBaseDatos.class
 com\poo\edu\utp\ingenieria\sistemaventas\repositorios\FacturaRepository.class
