@@ -1,7 +1,7 @@
 package com.poo.edu.utp.ingenieria.sistemaventas.dto;
 import java.util.Date;
 
-public class ClienteProducto {
+public class ClienteProductoDTO {
     
     private String nombreCliente;
     private long ruc;
@@ -10,7 +10,7 @@ public class ClienteProducto {
     private String nombreProducto;
     private int cantidad;
 
-    public ClienteProducto() {}
+    public ClienteProductoDTO() {}
 
     public String getNombreCliente() {
         return nombreCliente;

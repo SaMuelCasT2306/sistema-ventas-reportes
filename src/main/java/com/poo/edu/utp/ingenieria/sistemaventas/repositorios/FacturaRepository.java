@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-import com.poo.edu.utp.ingenieria.sistemaventas.dto.FacturaProducto;
+import com.poo.edu.utp.ingenieria.sistemaventas.dto.FacturaProductoDTO;
 import com.poo.edu.utp.ingenieria.sistemaventas.modelos.Factura;
 import com.poo.edu.utp.ingenieria.sistemaventas.servicios.ConexionBaseDatos;
 
@@ -24,9 +24,9 @@ public class FacturaRepository {
         this.db = db;
     }
     
-    public List<FacturaProducto> listaFacturasPorNombreProducto (String nombreProducto) throws SQLException{
+    public List<FacturaProductoDTO> listaFacturasPorNombreProducto (String codigoProducto) throws SQLException{
 
-        List<FacturaProducto> listafacturas = new ArrayList<>(); 
+        List<FacturaProductoDTO> listafacturas = new ArrayList<>(); 
         String sql = "SELECT f.nroFactura,f.fecha,p.nombre AS producto,df.cantidad,df.precioUnitario,df.importe\r\n" + //
                         "FROM Factura f\r\n" + //
                         "INNER JOIN DetalleFactura df ON f.idFactura = df.idFactura\r\n" + //
@@ -35,12 +35,12 @@ public class FacturaRepository {
 
         try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)){
 
-            ps.setString(1, nombreProducto);
+            ps.setString(1, codigoProducto);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
                 
-                FacturaProducto facturaProducto = new FacturaProducto();
+                FacturaProductoDTO facturaProducto = new FacturaProductoDTO();
                 facturaProducto.setNroFactura(rs.getString(1));
                 facturaProducto.setFecha(rs.getDate(2));
                 facturaProducto.setProducto(rs.getString(3));
@@ -57,7 +57,40 @@ public class FacturaRepository {
 
     }
     
-    public void ImprimirFacturasPorNombreProducto (List<FacturaProducto> listaFacturaProductos){
+    public List<FacturaProductoDTO> listaFacturasPorNombreProductoDinamico (String nombreProducto) throws SQLException{
+
+        List<FacturaProductoDTO> listafacturas = new ArrayList<>(); 
+        String sql = "SELECT f.nroFactura, f.fecha, p.nombre AS producto, df.cantidad, df.precioUnitario, df.importe\n" +
+                    "FROM Factura f\n" +
+                    "INNER JOIN DetalleFactura df ON f.idFactura = df.idFactura\n" +
+                    "INNER JOIN Producto p ON df.idProducto = p.idProducto\n" +
+                    "WHERE p.nombre LIKE ?";
+
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)){
+
+            ps.setString(1, "%"+nombreProducto+"%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()){
+                
+                FacturaProductoDTO facturaProducto = new FacturaProductoDTO();
+                facturaProducto.setNroFactura(rs.getString(1));
+                facturaProducto.setFecha(rs.getDate(2));
+                facturaProducto.setProducto(rs.getString(3));
+                facturaProducto.setCantidad(rs.getInt(4));
+                facturaProducto.setPrecioUnitario(rs.getFloat(5));
+                facturaProducto.setImporte(rs.getFloat(6));
+                listafacturas.add(facturaProducto);
+
+            }
+
+        }
+
+        return listafacturas;
+
+    }
+    
+    public void ImprimirFacturasPorNombreProducto (List<FacturaProductoDTO> listaFacturaProductos){
 
         try {
 
@@ -66,7 +99,7 @@ public class FacturaRepository {
             }
             
             DecimalFormat df = new DecimalFormat("0.00");
-            for (FacturaProducto fp : listaFacturaProductos){
+            for (FacturaProductoDTO fp : listaFacturaProductos){
 
                 String pUFormateado = "";
                 String iFormateado = "";

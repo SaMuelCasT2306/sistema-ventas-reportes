@@ -57,7 +57,7 @@ public class ProductoRepository {
     
     public void updateProducto (Producto p) throws SQLException{
         
-        String sql = "UPDATE Cliente SET codigo=?, nombre=?, precioUnitario=? WHERE idProducto=?";
+        String sql = "UPDATE Producto SET codigo=?, nombre=?, precioUnitario=? WHERE idProducto=?";
         
         try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql)){
             
@@ -98,6 +98,29 @@ public class ProductoRepository {
         String sql = "SELECT idProducto, codigo, nombre, precioUnitario FROM Producto ORDER BY idProducto ASC";
         
         try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql);ResultSet rs = ps.executeQuery()){
+            while (rs.next()){
+                Producto producto = new Producto();
+                producto.setId(rs.getInt(1));
+                producto.setCodigo(rs.getString(2));
+                producto.setNombre(rs.getString(3));
+                producto.setPrecioUnitario(rs.getFloat(4));
+                productos.add(producto);
+            }
+        }
+        return productos;
+    }
+    
+    public List<Producto> listarProductosDinamico(String nombre) throws SQLException{
+        
+        List<Producto> productos = new ArrayList<>();
+        String sql = "SELECT idProducto, codigo, nombre, precioUnitario \n" +
+                        "FROM Producto \n" +
+                        "WHERE nombre LIKE ?";
+        
+        try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql)){
+            
+            ps.setString(1, "%"+nombre+"%");
+            ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 Producto producto = new Producto();
                 producto.setId(rs.getInt(1));
