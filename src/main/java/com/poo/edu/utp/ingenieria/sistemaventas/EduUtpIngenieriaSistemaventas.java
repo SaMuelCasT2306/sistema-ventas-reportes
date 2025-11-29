@@ -33,7 +33,11 @@ public class EduUtpIngenieriaSistemaventas {
         mp.setLocationRelativeTo(null);
         mp.setResizable(false);
 
+
+         /*
         inicializarConexiones();
+
+
         scanner = new Scanner(System.in);
 
         boolean salir = false;
@@ -208,5 +212,8 @@ public class EduUtpIngenieriaSistemaventas {
 
         System.err.println("Detalle: " + e.getMessage());
         pausar();
+
+
+         */
     }
 }

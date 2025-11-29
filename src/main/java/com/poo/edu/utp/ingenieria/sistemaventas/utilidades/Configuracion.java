@@ -12,7 +12,8 @@ public class Configuracion {
     public static final String PLANTILLA_FACTURAS = "plantilla_reporte_facturas.xlsx";
     
     // Configuración de base de datos
-    public static final String DB_URL = "jdbc:sqlserver://localhost\\SQLEXPRESS01;databaseName=db_ventas;encrypt=false";
+    //public static final String DB_URL = "jdbc:sqlserver://localhost\\SQLEXPRESS01;databaseName=db_ventas;encrypt=false";
+    public static final String DB_URL = "jdbc:sqlserver://localhost\\MSSQLSERVER;databaseName=db_ventas;encrypt=false";
     public static final String DB_USUARIO = "usuario_ventas";
     public static final String DB_PASSWORD = "9876543210";
     

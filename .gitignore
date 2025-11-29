@@ -1,6 +1,8 @@
 # Compiled class files
-*.class
 target/
+*.class
+*.jar
+*.war
 build/
 
 # Log files

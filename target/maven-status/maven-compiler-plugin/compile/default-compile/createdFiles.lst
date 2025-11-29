@@ -52,4 +52,5 @@ com\poo\edu\utp\ingenieria\sistemaventas\utilidades\Configuracion.class
 com\poo\edu\utp\ingenieria\sistemaventas\modelos\Cliente.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaProductos$3.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClienteProducto$4.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaLogin$4.class
 com\poo\edu\utp\ingenieria\sistemaventas\utilidades\Login.class
