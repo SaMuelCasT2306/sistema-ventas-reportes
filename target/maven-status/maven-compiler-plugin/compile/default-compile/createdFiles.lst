@@ -33,6 +33,7 @@ com\poo\edu\utp\ingenieria\sistemaventas\repositorios\EmpresaRepository.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClienteProducto$6.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaLogin$2.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClienteProducto.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaPanelPrincipal.class
 com\poo\edu\utp\ingenieria\sistemaventas\repositorios\FacturaRepository.class
 com\poo\edu\utp\ingenieria\sistemaventas\modelos\Empresa.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaProductos$7.class
@@ -40,6 +41,7 @@ com\poo\edu\utp\ingenieria\sistemaventas\modelos\Producto.class
 com\poo\edu\utp\ingenieria\sistemaventas\utilidades\Reportes.class
 com\poo\edu\utp\ingenieria\sistemaventas\modelos\DetalleFactura.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaProductos$4.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaPanelPrincipal$1.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaPrincipal$3.class
 com\poo\edu\utp\ingenieria\sistemaventas\repositorios\ProductoRepository.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaFacturasProducto$3.class
