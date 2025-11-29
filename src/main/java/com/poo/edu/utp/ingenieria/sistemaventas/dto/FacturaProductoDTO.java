@@ -2,7 +2,7 @@ package com.poo.edu.utp.ingenieria.sistemaventas.dto;
 
 import java.util.Date;
 
-public class FacturaProducto {
+public class FacturaProductoDTO {
     private String nroFactura;
     private Date fecha;
     private String producto;
@@ -10,7 +10,7 @@ public class FacturaProducto {
     private float precioUnitario;
     private float importe;
 
-    public FacturaProducto() {}
+    public FacturaProductoDTO() {}
 
     public String getNroFactura() {
         return nroFactura;

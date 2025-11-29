@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.DecimalFormat;
 
-import com.poo.edu.utp.ingenieria.sistemaventas.dto.ClienteProducto;
+import com.poo.edu.utp.ingenieria.sistemaventas.dto.ClienteProductoDTO;
 import com.poo.edu.utp.ingenieria.sistemaventas.modelos.Cliente;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -128,9 +128,9 @@ public class ClienteRepository {
         
     }
     
-    public List<ClienteProducto> listarClientesPorProducto (String nombreProducto) throws SQLException{
+    public List<ClienteProductoDTO> listarClientesPorProducto (String nombreProducto) throws SQLException{
 
-        List<ClienteProducto> listaClientes = new ArrayList<>();
+        List<ClienteProductoDTO> listaClientes = new ArrayList<>();
         String sql = "SELECT c.Nombre AS Cliente,c.RUC,f.NroFactura,f.Fecha,p.Nombre AS Producto,df.Cantidad\r\n" + //
                         "FROM Factura f\r\n" + //
                         "INNER JOIN Cliente c ON f.idCliente = c.idCliente\r\n" + //
@@ -145,7 +145,7 @@ public class ClienteRepository {
 
             while (rs.next()){
                 
-                ClienteProducto clienteProducto = new ClienteProducto();
+                ClienteProductoDTO clienteProducto = new ClienteProductoDTO();
                 clienteProducto.setNombreCliente(rs.getString(1));
                 clienteProducto.setRuc(rs.getLong(2));
                 clienteProducto.setNroFactura(rs.getString(3));
@@ -162,7 +162,7 @@ public class ClienteRepository {
 
     }
 
-    public void imprimirListaClientesPorProductos (List<ClienteProducto> listaClienteProductos){
+    public void imprimirListaClientesPorProductos (List<ClienteProductoDTO> listaClienteProductos){
 
         try {
 
@@ -171,7 +171,7 @@ public class ClienteRepository {
             }
             
             DecimalFormat df = new DecimalFormat("0.00");
-            for (ClienteProducto cp : listaClienteProductos){
+            for (ClienteProductoDTO cp : listaClienteProductos){
 
                 System.out.println("Nombre Cliente: " + cp.getNombreCliente() + " | RUC: " + cp.getRuc() + " | Código Factura: " + cp.getNroFactura() + " | Fecha " + cp.getFecha() + " | Nombre Producto: " + cp.getNombreProducto() + " | Cantidad: " + cp.getCantidad());
 
@@ -183,4 +183,38 @@ public class ClienteRepository {
 
     }
 
+    public List<ClienteProductoDTO> listarClientesPorProductoDinamico (String nombreProducto) throws SQLException{
+
+        List<ClienteProductoDTO> listaClientes = new ArrayList<>();
+        String sql = "SELECT c.Nombre AS Cliente, c.RUC, f.NroFactura, f.Fecha, p.Nombre AS Producto, df.Cantidad\n" +
+                    "FROM Factura f\n" +
+                    "INNER JOIN Cliente c ON f.idCliente = c.idCliente\n" +
+                    "INNER JOIN DetalleFactura df ON f.idFactura = df.idFactura\n" +
+                    "INNER JOIN Producto p ON df.idProducto = p.idProducto\n" +
+                    "WHERE p.Nombre LIKE ?";
+
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)){
+
+            ps.setString(1, "%"+nombreProducto+"%");
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()){
+                
+                ClienteProductoDTO clienteProducto = new ClienteProductoDTO();
+                clienteProducto.setNombreCliente(rs.getString(1));
+                clienteProducto.setRuc(rs.getLong(2));
+                clienteProducto.setNroFactura(rs.getString(3));
+                clienteProducto.setFecha(rs.getDate(4));
+                clienteProducto.setNombreProducto(rs.getString(5));
+                clienteProducto.setCantidad(rs.getInt(6));
+                listaClientes.add(clienteProducto);
+
+            }
+
+        }
+
+        return listaClientes;
+
+    }
+    
 }
