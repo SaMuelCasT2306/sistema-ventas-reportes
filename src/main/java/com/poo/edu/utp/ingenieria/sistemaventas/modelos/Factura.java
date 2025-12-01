@@ -1,10 +1,11 @@
 package com.poo.edu.utp.ingenieria.sistemaventas.modelos;
+import java.util.Date;
 
 public class Factura {
     
     private int id;
     private String numeroFactura;
-    private String fecha;
+    private Date fecha;
     private String condicionPago;
     private float Subtotal;
     private float igv;
@@ -12,7 +13,7 @@ public class Factura {
     private int idEmpresa;
     private int idCliente;
 
-    public Factura(int id, String numeroFactura, String fecha, String condicionPago, float Subtotal, float igv, float total, int idEmpresa, int idCliente) {
+    public Factura(int id, String numeroFactura, Date fecha, String condicionPago, float Subtotal, float igv, float total, int idEmpresa, int idCliente) {
         this.id = id;
         this.numeroFactura = numeroFactura;
         this.fecha = fecha;
@@ -35,7 +36,7 @@ public class Factura {
         return numeroFactura;
     }
 
-    public String getFecha() {
+    public Date getFecha() {
         return fecha;
     }
 
@@ -71,7 +72,7 @@ public class Factura {
         this.numeroFactura = numeroFactura;
     }
 
-    public void setFecha(String fecha) {
+    public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
 

@@ -1,6 +1,7 @@
 
 package com.poo.edu.utp.ingenieria.sistemaventas.controladores;
 import com.poo.edu.utp.ingenieria.sistemaventas.dto.ClienteProductoDTO;
+import com.poo.edu.utp.ingenieria.sistemaventas.dto.FacturaClienteDTO;
 import com.poo.edu.utp.ingenieria.sistemaventas.dto.FacturaProductoDTO;
 import com.poo.edu.utp.ingenieria.sistemaventas.modelos.Cliente;
 import com.poo.edu.utp.ingenieria.sistemaventas.modelos.Producto;
@@ -65,6 +66,10 @@ public class Controlador {
     
     public boolean login(String usuario, String contraseña) throws SQLException{
         return l.validarLogin(usuario, contraseña);
+    }
+    
+    public List<FacturaClienteDTO> cargarTablaFacturasPorFecha(String fromDate, String toDate) throws SQLException{
+        return fr.listaFacturas(fromDate,toDate);
     }
     
 }
