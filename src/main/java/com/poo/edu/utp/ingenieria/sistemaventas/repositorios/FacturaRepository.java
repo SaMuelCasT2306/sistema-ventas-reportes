@@ -25,18 +25,17 @@ public class FacturaRepository {
         this.db = db;
     }
     
-    public List<FacturaProductoDTO> listaFacturasPorNombreProducto (String codigoProducto) throws SQLException{
+    public List<FacturaProductoDTO> listaFacturasPorNombreProducto () throws SQLException{
 
         List<FacturaProductoDTO> listafacturas = new ArrayList<>(); 
         String sql = "SELECT f.nroFactura,f.fecha,p.nombre AS producto,df.cantidad,df.precioUnitario,df.importe\r\n" + //
                         "FROM Factura f\r\n" + //
                         "INNER JOIN DetalleFactura df ON f.idFactura = df.idFactura\r\n" + //
-                        "INNER JOIN Producto p ON df.idProducto = p.idProducto\r\n" + //
-                        "WHERE p.codigo = ?";
+                        "INNER JOIN Producto p ON df.idProducto = p.idProducto\r\n";
+                        //"WHERE p.codigo = ?";
 
         try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)){
 
-            ps.setString(1, codigoProducto);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
@@ -95,17 +94,17 @@ public class FacturaRepository {
         
         List<FacturaClienteDTO> listafacturas = new ArrayList<>(); 
         String sql = "SELECT \n" +
-"    f.idFactura AS id,\n" +
-"    f.fecha,\n" +
-"    c.nombre AS Nombre_Cliente, -- Aquí reemplazamos el número por el nombre\n" +
-"    f.total,\n" +
+"       f.idFactura AS id,\n" +
+"       f.fecha,\n" +
+"       c.nombre AS Nombre_Cliente, -- Aquí reemplazamos el número por el nombre\n" +
+"       f.total,\n" +
 "	f.condicionPago,\n" +
 "	f.subtotal,\n" +
 "	f.igv,\n" +
 "	f.nroFactura\n" +
-"FROM Factura f\n" +
-"INNER JOIN Cliente c ON f.idCliente = c.idCliente\n" +
-"WHERE f.fecha BETWEEN ? AND ?;";
+"       FROM Factura f\n" +
+"       INNER JOIN Cliente c ON f.idCliente = c.idCliente\n" +
+"       WHERE f.fecha BETWEEN ? AND ?;";
         
         try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)){
 

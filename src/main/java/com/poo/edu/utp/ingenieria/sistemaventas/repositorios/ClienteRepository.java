@@ -128,19 +128,19 @@ public class ClienteRepository {
         
     }
     
-    public List<ClienteProductoDTO> listarClientesPorProducto (String nombreProducto) throws SQLException{
+    public List<ClienteProductoDTO> listarClientesPorProducto () throws SQLException{
 
         List<ClienteProductoDTO> listaClientes = new ArrayList<>();
         String sql = "SELECT c.Nombre AS Cliente,c.RUC,f.NroFactura,f.Fecha,p.Nombre AS Producto,df.Cantidad\r\n" + //
                         "FROM Factura f\r\n" + //
                         "INNER JOIN Cliente c ON f.idCliente = c.idCliente\r\n" + //
                         "INNER JOIN DetalleFactura df ON f.idFactura = df.idFactura\r\n" + //
-                        "INNER JOIN Producto p ON df.idProducto = p.idProducto\r\n" + //
-                        "WHERE p.codigo = ?";
+                        "INNER JOIN Producto p ON df.idProducto = p.idProducto\r\n";
+                        //"WHERE p.codigo = ?";
 
         try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)){
 
-            ps.setString(1, nombreProducto);
+            //ps.setString(1, nombreProducto);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){

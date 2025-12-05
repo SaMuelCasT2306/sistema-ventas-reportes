@@ -72,7 +72,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jButton3.setBackground(new java.awt.Color(102, 102, 102));
         jButton3.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
-        jButton3.setText("FACTURAS/CLIENTE");
+        jButton3.setText("HISTORIAL DE FACTURACIÓN");
         jButton3.setBorder(null);
         jButton3.setBorderPainted(false);
         jButton3.setContentAreaFilled(false);
@@ -88,7 +88,7 @@ public class PantallaPrincipal extends javax.swing.JFrame {
         jButton5.setBackground(new java.awt.Color(102, 102, 102));
         jButton5.setFont(new java.awt.Font("Ebrima", 1, 12)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
-        jButton5.setText("CLIENTES/PRODUCTOS");
+        jButton5.setText("HISTORIAL DE COMPRAS");
         jButton5.setBorder(null);
         jButton5.setBorderPainted(false);
         jButton5.setContentAreaFilled(false);

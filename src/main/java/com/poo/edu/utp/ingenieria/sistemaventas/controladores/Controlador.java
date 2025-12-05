@@ -35,13 +35,13 @@ public class Controlador {
         return list;       
     }
     
-    public List<FacturaProductoDTO> cargarTablaFacturaProductos(String codigoProducto) throws SQLException{       
-        List<FacturaProductoDTO> list = fr.listaFacturasPorNombreProducto(codigoProducto);
+    public List<FacturaProductoDTO> cargarTablaFacturaProductos() throws SQLException{       
+        List<FacturaProductoDTO> list = fr.listaFacturasPorNombreProducto();
         return list;       
     }
     
-    public List<ClienteProductoDTO> cargarTablaClientesProducto(String codigoProducto) throws SQLException{       
-        List<ClienteProductoDTO> list = cr.listarClientesPorProducto(codigoProducto);
+    public List<ClienteProductoDTO> cargarTablaClientesProducto() throws SQLException{       
+        List<ClienteProductoDTO> list = cr.listarClientesPorProducto();
         return list;      
     }
     

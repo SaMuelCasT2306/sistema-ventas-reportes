@@ -6,6 +6,8 @@ import com.poo.edu.utp.ingenieria.sistemaventas.dto.FacturaProductoDTO;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 
 public class PantallaClienteProducto extends javax.swing.JFrame {
@@ -34,12 +36,17 @@ public class PantallaClienteProducto extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(36, 36, 36));
 
         jLabel1.setFont(new java.awt.Font("Yu Gothic Light", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("REPORTE CLIENTE POR PRODUCTO");
+        jLabel1.setText("HISTORIAL DE COMPRAS");
 
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -158,7 +165,12 @@ public class PantallaClienteProducto extends javax.swing.JFrame {
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
         if (jTextField1.getText().isEmpty()) {
-            limpiarTabla();
+            try {
+                cargarTabla();
+                //limpiarTabla();
+            } catch (SQLException ex) {
+                System.err.println("Error: " + ex);
+            }
         } else {
             try {
                 cargarTablaDinamica(jTextField1.getText());
@@ -167,6 +179,14 @@ public class PantallaClienteProducto extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_jTextField1KeyReleased
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        try {
+            cargarTabla();
+        } catch (SQLException ex) {
+            System.err.println("Error: " + ex);
+        }
+    }//GEN-LAST:event_formWindowOpened
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
@@ -181,7 +201,7 @@ public class PantallaClienteProducto extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
-    private void cargarTabla(String codigoProducto) throws SQLException {
+    private void cargarTabla() throws SQLException {
 
         // Definir modelo de la tabla
         DefaultTableModel modeloTabla = new DefaultTableModel() {
@@ -197,8 +217,9 @@ public class PantallaClienteProducto extends javax.swing.JFrame {
         String cabeceras[] = {"Nombre de cliente", "RUC", "Número de factura", "Fecha", "Nombre de producto", "Cantidad"};
         modeloTabla.setColumnIdentifiers(cabeceras);
 
-        List<ClienteProductoDTO> listaClienteProducto = control.cargarTablaClientesProducto(codigoProducto);
+        List<ClienteProductoDTO> listaClienteProducto = control.cargarTablaClientesProducto();
 
+        
         if (listaClienteProducto.isEmpty()) {
             modeloTabla.setRowCount(0);
             jTable1.setModel(modeloTabla);

@@ -61,7 +61,7 @@ public class PantallaFacturasProducto extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Yu Gothic Light", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("BUSCAR FACTURAS POR PRODUCTO");
+        jLabel1.setText("HISTORIAL DE FACTURACIÓN");
 
         jLabel2.setBackground(new java.awt.Color(255, 255, 255));
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -162,7 +162,11 @@ public class PantallaFacturasProducto extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-
+        try {
+            cargarTabla();
+        } catch (SQLException ex) {
+            System.err.println("Error: " + ex);
+        }
     }//GEN-LAST:event_formWindowOpened
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -171,7 +175,11 @@ public class PantallaFacturasProducto extends javax.swing.JFrame {
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
         if (jTextField1.getText().isEmpty()) {
-            limpiarTabla();
+            try {
+                cargarTabla();
+            } catch (SQLException ex) {
+                System.err.println("Error: " + ex);
+            }
         } else {
             try {
                 cargarTablaDinamica(jTextField1.getText());
@@ -194,7 +202,7 @@ public class PantallaFacturasProducto extends javax.swing.JFrame {
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
-    private void cargarTabla(String codigoProducto) throws SQLException {
+    private void cargarTabla() throws SQLException {
 
         // Definir modelo de la tabla
         DefaultTableModel modeloTabla = new DefaultTableModel() {
@@ -214,7 +222,7 @@ public class PantallaFacturasProducto extends javax.swing.JFrame {
         float importeAcumulado = 0;
         DecimalFormat df = new DecimalFormat("0.00");
 
-        List<FacturaProductoDTO> listaFacturasProducto = control.cargarTablaFacturaProductos(codigoProducto);
+        List<FacturaProductoDTO> listaFacturasProducto = control.cargarTablaFacturaProductos();
 
         if (listaFacturasProducto.isEmpty()) {
 
