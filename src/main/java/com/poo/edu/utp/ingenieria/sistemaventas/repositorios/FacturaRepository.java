@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.poo.edu.utp.ingenieria.sistemaventas.dto.FacturaProductoDTO;
+import com.poo.edu.utp.ingenieria.sistemaventas.modelos.DetalleFactura;
 import com.poo.edu.utp.ingenieria.sistemaventas.modelos.Factura;
 import com.poo.edu.utp.ingenieria.sistemaventas.servicios.ConexionBaseDatos;
 
@@ -90,21 +91,21 @@ public class FacturaRepository {
 
     }
     
-    public List<FacturaClienteDTO> listaFacturas (String fromDate, String toDate) throws SQLException{
+    public List<FacturaClienteDTO> listaFacturasPorFecha (String fromDate, String toDate) throws SQLException{
         
         List<FacturaClienteDTO> listafacturas = new ArrayList<>(); 
         String sql = "SELECT \n" +
-"       f.idFactura AS id,\n" +
-"       f.fecha,\n" +
-"       c.nombre AS Nombre_Cliente, -- Aquí reemplazamos el número por el nombre\n" +
-"       f.total,\n" +
-"	f.condicionPago,\n" +
-"	f.subtotal,\n" +
-"	f.igv,\n" +
-"	f.nroFactura\n" +
-"       FROM Factura f\n" +
-"       INNER JOIN Cliente c ON f.idCliente = c.idCliente\n" +
-"       WHERE f.fecha BETWEEN ? AND ?;";
+            "       f.idFactura AS id,\n" +
+            "       f.fecha,\n" +
+            "       c.nombre AS Nombre_Cliente,\n" +
+            "       f.total,\n" +
+            "	f.condicionPago,\n" +
+            "	f.subtotal,\n" +
+            "	f.igv,\n" +
+            "	f.nroFactura\n" +
+            "       FROM Factura f\n" +
+            "       INNER JOIN Cliente c ON f.idCliente = c.idCliente\n" +
+            "       WHERE f.fecha BETWEEN ? AND ?;";
         
         try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)){
 
@@ -131,30 +132,101 @@ public class FacturaRepository {
         return listafacturas;
     }
     
-    public void ImprimirFacturasPorNombreProducto (List<FacturaProductoDTO> listaFacturaProductos){
+    public List<FacturaClienteDTO> listaFacturas() throws SQLException{
+        
+        List<FacturaClienteDTO> listafacturas = new ArrayList<>(); 
+        String sql = "SELECT \n" +
+            "       f.idFactura AS id,\n" +
+            "       f.fecha,\n" +
+            "       c.nombre AS Nombre_Cliente,\n" +
+            "       f.total,\n" +
+            "	f.condicionPago,\n" +
+            "	f.subtotal,\n" +
+            "	f.igv,\n" +
+            "	f.nroFactura\n" +
+            "       FROM Factura f\n" +
+            "       INNER JOIN Cliente c ON f.idCliente = c.idCliente\n";
+        
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)){
 
-        try {
+            ResultSet rs = ps.executeQuery();
 
-            if (listaFacturaProductos.isEmpty()){
-                throw new IllegalArgumentException("La lista esta vacia");
+            while (rs.next()){
+                
+                FacturaClienteDTO facturas = new FacturaClienteDTO();
+                facturas.setNroFactura(rs.getString(8));
+                facturas.setFecha(rs.getDate(2));
+                facturas.setNombreCliente(rs.getString(3));
+                facturas.setCondicionPago(rs.getString(5));
+                facturas.setSubtotal(rs.getFloat(6));
+                facturas.setIgv(rs.getFloat(7));
+                facturas.setTotal(rs.getFloat(4));                       
+                listafacturas.add(facturas);
+
             }
-            
-            DecimalFormat df = new DecimalFormat("0.00");
-            for (FacturaProductoDTO fp : listaFacturaProductos){
 
-                String pUFormateado = "";
-                String iFormateado = "";
-                pUFormateado = df.format(fp.getPrecioUnitario());
-                iFormateado = df.format(fp.getImporte());
-
-                System.out.println("Codigo Factura: " + fp.getNroFactura() + " | Fecha: " + fp.getFecha() + " | Producto: " + fp.getProducto() + " | Cantidad: " + fp.getCantidad() + " | Precio Unitario: S/. " + pUFormateado + " | Importe Total: S/. " + iFormateado);
-
-            }
-
-        }catch (Exception e){
-            System.err.println(e.getMessage());
         }
+        
+        return listafacturas;
+    }
 
-    } 
+    public void insertarDetalle(DetalleFactura detalle) throws SQLException {
+
+        String sql = "INSERT INTO DetalleFactura (idFactura, idProducto, cantidad, precioUnitario, importe) VALUES (?, ?, ?, ?, ?)";
+    
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ps.setInt(1, detalle.getIdFactura());      
+            ps.setInt(2, detalle.getIdProducto());     
+            ps.setInt(3, detalle.getCantidad());
+            ps.setFloat(4, detalle.getPrecioUnitario());
+            ps.setFloat(5, detalle.getImporte());
+
+            ps.executeUpdate();
+    }
+}
+
+    public int insertarFactura(Factura factura) throws SQLException {
+
+        String sql = "INSERT INTO Factura (nroFactura, fecha, condicionPago, subtotal, igv, total, idEmpresa, idCliente) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, factura.getNumeroFactura());
+            ps.setDate(2, new java.sql.Date(factura.getFecha().getTime()));
+            ps.setString(3, factura.getCondicionPago());
+            ps.setFloat(4, factura.getSubtotal());
+            ps.setFloat(5, factura.getIgv());
+            ps.setFloat(6, factura.getTotal());
+            ps.setInt(7, factura.getIdEmpresa());
+            ps.setInt(8, factura.getIdCliente());
+            
+            ps.executeUpdate();
+            
+            try (java.sql.ResultSet rs = ps.getGeneratedKeys()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                } else {
+                    throw new SQLException("No se pudo obtener el ID generado para la factura");
+                }
+            }
+        }
+}
+
+    public String obtenerProxNumeroFactura() throws SQLException {
+    String sql = "SELECT MAX(CAST(SUBSTRING(nroFactura, 10, 4) AS INT)) as maxNum FROM Factura WHERE nroFactura LIKE 'F-2025-%'";
+    
+    try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+        ResultSet rs = ps.executeQuery();
+        
+        int proximoNumero = 1;
+        if (rs.next()) {
+            int maxNum = rs.getInt("maxNum");
+            if (maxNum > 0) {
+                proximoNumero = maxNum + 1;
+            }
+        }
+        
+        return String.format("F-2025-%04d", proximoNumero);
+    }
+}
 
 }

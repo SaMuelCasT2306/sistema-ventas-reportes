@@ -112,22 +112,6 @@ public class ClienteRepository {
         return clientes;
     }
     
-    public void imprimirListaClientes (List<Cliente> clientes){
-        
-        try {
-            if(clientes.isEmpty()){
-                throw new IllegalArgumentException("La lista no tiene ningun item");
-            }else{
-                for (Cliente e : clientes){
-                    System.out.println("id: " + e.getId() + " | ruc: " + e.getRuc() + " | nombre: " + e.getNombre() + " | direccion: " + e.getDireccion());
-                }
-            }
-        }catch(Exception e){
-            System.err.println("Error: " + e.getMessage());
-        }
-        
-    }
-    
     public List<ClienteProductoDTO> listarClientesPorProducto () throws SQLException{
 
         List<ClienteProductoDTO> listaClientes = new ArrayList<>();
@@ -159,27 +143,6 @@ public class ClienteRepository {
         }
 
         return listaClientes;
-
-    }
-
-    public void imprimirListaClientesPorProductos (List<ClienteProductoDTO> listaClienteProductos){
-
-        try {
-
-            if (listaClienteProductos.isEmpty()){
-                throw new IllegalArgumentException("La lista esta vacia");
-            }
-            
-            DecimalFormat df = new DecimalFormat("0.00");
-            for (ClienteProductoDTO cp : listaClienteProductos){
-
-                System.out.println("Nombre Cliente: " + cp.getNombreCliente() + " | RUC: " + cp.getRuc() + " | Código Factura: " + cp.getNroFactura() + " | Fecha " + cp.getFecha() + " | Nombre Producto: " + cp.getNombreProducto() + " | Cantidad: " + cp.getCantidad());
-
-            }
-
-        }catch (Exception e){
-            System.err.println(e.getMessage());
-        }
 
     }
 

@@ -13,92 +13,92 @@ import java.util.List;
 import com.poo.edu.utp.ingenieria.sistemaventas.servicios.ConexionBaseDatos;
 
 public class ProductoRepository {
-    
-     //atributos conexion DB
+
+    //atributos conexion DB
     private ConexionBaseDatos db;
-    
+
     //Constructor 
     public ProductoRepository(ConexionBaseDatos db) {
         this.db = db;
     }
-    
-        //Metodos INSERT cliente 
-    public void insertarProducto (Producto p) throws SQLException {
-        
+
+    //Metodos INSERT cliente 
+    public void insertarProducto(Producto p) throws SQLException {
+
         //Asignar query con placeholders (?)
         String sql = "INSERT INTO Producto (codigo, nombre, precioUnitario) VALUES (?, ?, ?)";
-        
+
         //try (abre la conexion a la base de datos, y abrir prepared statements que se encarga de ejecutar la query y devolver la PK generadas)
-        try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
-            
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             //reemplazar placeholders
             ps.setString(1, p.getCodigo());
             ps.setString(2, p.getNombre());
             ps.setFloat(3, p.getPrecioUnitario());
-            
+
             //Ejecutar query
             ps.executeUpdate();
-            
+
             //try (para recuperar los ids creados por la BD)
-            try (ResultSet rs = ps.getGeneratedKeys()){
-                
-                if (rs.next()){
+            try (ResultSet rs = ps.getGeneratedKeys()) {
+
+                if (rs.next()) {
                     //obtener el id en la columna 1
                     p.setId(rs.getInt(1));
-                }else{
+                } else {
                     throw new SQLException("No se pudo obtener el ID generado para el producto");
                 }
-                
+
             }
-            
+
         }
-        
-    } 
-    
-    public void updateProducto (Producto p) throws SQLException{
-        
+
+    }
+
+    public void updateProducto(Producto p) throws SQLException {
+
         String sql = "UPDATE Producto SET codigo=?, nombre=?, precioUnitario=? WHERE idProducto=?";
-        
-        try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql)){
-            
+
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
             ps.setString(1, p.getCodigo());
             ps.setString(2, p.getNombre());
             ps.setFloat(3, p.getPrecioUnitario());
             ps.setInt(4, p.getId());
             int filas = ps.executeUpdate();
-            
-            if (filas >= 1){
+
+            if (filas >= 1) {
                 System.out.println("Se actualizo " + filas + " filas correctamente");
-            }else{
+            } else {
                 throw new SQLException("No se encontro el ID del producto");
             }
-        } 
+        }
     }
-    
-    public void deleteProducto (Producto p)throws SQLException{
-        
+
+    public void deleteProducto(Producto p) throws SQLException {
+
         String sql = "DELETE FROM Producto WHERE idProducto = ?;";
-        
-        try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql)){
+
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setInt(1, p.getId());
             int filas = ps.executeUpdate();
-            
-            if (filas >= 1){
+
+            if (filas >= 1) {
                 System.out.println("Se elimino " + filas + " filas correctamente");
-            }else{
+            } else {
                 throw new SQLException("No se encontro el ID del producto");
             }
         }
-        
+
     }
-    
-    public List<Producto> listarProductos() throws SQLException{
-        
+
+    public List<Producto> listarProductos() throws SQLException {
+
         List<Producto> productos = new ArrayList<>();
         String sql = "SELECT idProducto, codigo, nombre, precioUnitario FROM Producto ORDER BY idProducto ASC";
-        
-        try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql);ResultSet rs = ps.executeQuery()){
-            while (rs.next()){
+
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
                 Producto producto = new Producto();
                 producto.setId(rs.getInt(1));
                 producto.setCodigo(rs.getString(2));
@@ -109,19 +109,19 @@ public class ProductoRepository {
         }
         return productos;
     }
-    
-    public List<Producto> listarProductosDinamico(String nombre) throws SQLException{
-        
+
+    public List<Producto> listarProductosDinamico(String nombre) throws SQLException {
+
         List<Producto> productos = new ArrayList<>();
-        String sql = "SELECT idProducto, codigo, nombre, precioUnitario \n" +
-                        "FROM Producto \n" +
-                        "WHERE nombre LIKE ?";
-        
-        try (Connection con = db.conexion();PreparedStatement ps = con.prepareStatement(sql)){
-            
-            ps.setString(1, "%"+nombre+"%");
+        String sql = "SELECT idProducto, codigo, nombre, precioUnitario \n"
+                + "FROM Producto \n"
+                + "WHERE nombre LIKE ?";
+
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+
+            ps.setString(1, "%" + nombre + "%");
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 Producto producto = new Producto();
                 producto.setId(rs.getInt(1));
                 producto.setCodigo(rs.getString(2));
@@ -132,21 +132,23 @@ public class ProductoRepository {
         }
         return productos;
     }
-    
-    public void imprimirListaProductos (List<Producto> productos){
-        
-        try {
-            if(productos.isEmpty()){
-                throw new IllegalArgumentException("La lista no tiene ningun item");
-            }else{
-                for (Producto p : productos){
-                    System.out.println("id: " + p.getId() + " | Codigo: " + p.getCodigo() + " | Nombre: " + p.getNombre() + " | Precio Unitario: " + p.getPrecioUnitario());
+
+    public String obtenerProxCodigoProducto() throws SQLException {
+        String sql = "SELECT MAX(CAST(SUBSTRING(codigo, 2, 10) AS INT)) as maxNum FROM Producto WHERE codigo LIKE 'P%'";
+
+        try (Connection con = db.conexion(); PreparedStatement ps = con.prepareStatement(sql)) {
+            ResultSet rs = ps.executeQuery();
+
+            int proximoNumero = 1;
+            if (rs.next()) {
+                int maxNum = rs.getInt("maxNum");
+                if (maxNum > 0) {
+                    proximoNumero = maxNum + 1;
                 }
             }
-        }catch(Exception e){
-            System.err.println("Error: " + e.getMessage());
+
+            return String.format("P%03d", proximoNumero);
         }
-        
     }
-    
+
 }

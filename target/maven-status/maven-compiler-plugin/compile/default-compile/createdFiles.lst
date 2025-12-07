@@ -6,13 +6,15 @@ com\raven\datechooser\DateBetween.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaPrincipal$2.class
 com\raven\datechooser\listener\DateChooserListener.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClienteProducto$5.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaCrearFactura$1.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaProductos$2.class
 com\poo\edu\utp\ingenieria\sistemaventas\servicios\ConexionBaseDatos.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaCrearCliente.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClientes.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaPrincipal$5.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClienteProducto$2.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaCrearFactura$4.class
 com\raven\datechooser\DateChooser$DateSelectionMode.class
-com\poo\edu\utp\ingenieria\sistemaventas\repositorios\DetalleFacturaRepository.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaFacturas$5.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaFacturas$3.class
 com\poo\edu\utp\ingenieria\sistemaventas\controladores\Controlador.class
@@ -20,10 +22,10 @@ com\raven\datechooser\DateChooserException.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaFacturasProducto$7.class
 com\raven\datechooser\layout\CellLayout.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClientes$2.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaProductos$8.class
 com\poo\edu\utp\ingenieria\sistemaventas\repositorios\ClienteRepository.class
 com\raven\datechooser\listener\DateChooserAdapter.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClienteProducto$3.class
-com\poo\edu\utp\ingenieria\sistemaventas\repositorios\EmpresaRepository.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaFacturas$6.class
 com\poo\edu\utp\ingenieria\sistemaventas\dto\FacturaClienteDTO.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClienteProducto.class
@@ -38,8 +40,10 @@ com\poo\edu\utp\ingenieria\sistemaventas\dto\FacturaProductoDTO.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClientes$1.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaProductos$6.class
 com\raven\datechooser\DateChooserEditorDocumentFilter.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaCrearProducto.class
 com\raven\datechooser\DateChooser$DateChooserLayout.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaPrincipal$6.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaFacturas$7.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaFacturas$1.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClienteProducto$4.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaLogin$4.class
@@ -60,6 +64,7 @@ com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaPrincipal$1.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaPrincipal.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaFacturasProducto.class
 com\raven\datechooser\render\DefaultDateChooserRender.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaCrearFactura.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaPrincipal$4.class
 com\raven\datechooser\layout\HeaderLayout.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaFacturasProducto$4.class
@@ -69,6 +74,7 @@ com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaLogin$2.class
 com\poo\edu\utp\ingenieria\sistemaventas\repositorios\FacturaRepository.class
 com\poo\edu\utp\ingenieria\sistemaventas\modelos\Empresa.class
 com\poo\edu\utp\ingenieria\sistemaventas\modelos\Producto.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaCrearFactura$3.class
 com\poo\edu\utp\ingenieria\sistemaventas\utilidades\Reportes.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaProductos$4.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaPanelPrincipal$1.class
@@ -81,9 +87,11 @@ com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClienteProducto$7.class
 com\raven\datechooser\DateChooser$ButtonDate.class
 com\raven\datechooser\DateChooser.class
 com\poo\edu\utp\ingenieria\sistemaventas\utilidades\Configuracion.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaClientes$4.class
 com\poo\edu\utp\ingenieria\sistemaventas\modelos\Cliente.class
 com\raven\datechooser\DateChooser$ButtonDate$1.class
 com\raven\datechooser\listener\DateChooserAction.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaProductos$3.class
+com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaCrearFactura$2.class
 com\poo\edu\utp\ingenieria\sistemaventas\utilidades\Login.class
 com\poo\edu\utp\ingenieria\sistemaventas\ui\PantallaFacturas$4.class
