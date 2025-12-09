@@ -11,6 +11,9 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;
 import javax.swing.JFileChooser;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 
 public class PantallaProductos extends javax.swing.JFrame {
 
@@ -19,6 +22,7 @@ public class PantallaProductos extends javax.swing.JFrame {
     public PantallaProductos() {
         control = new Controlador();
         initComponents();
+        MenuContextual();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
@@ -38,7 +42,6 @@ public class PantallaProductos extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -115,9 +118,6 @@ public class PantallaProductos extends javax.swing.JFrame {
             }
         });
 
-        jButton4.setText("Actualizar");
-        jButton4.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
         jButton5.setForeground(new java.awt.Color(102, 102, 102));
         jButton5.setText("Actualizar");
         jButton5.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -159,11 +159,6 @@ public class PantallaProductos extends javax.swing.JFrame {
                     .addGap(27, 27, 27)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 686, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(31, Short.MAX_VALUE)))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(334, 334, 334)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGap(334, 334, 334)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -195,11 +190,6 @@ public class PantallaProductos extends javax.swing.JFrame {
                     .addGap(49, 49, 49)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addContainerGap(477, Short.MAX_VALUE)))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(266, 266, 266)
-                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGap(267, 267, 267)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -267,17 +257,16 @@ public class PantallaProductos extends javax.swing.JFrame {
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         try {
-                cargarTabla();
-            } catch (SQLException ex) {
-                System.err.println("Error: " + ex);
-            }
+            cargarTabla();
+        } catch (SQLException ex) {
+            System.err.println("Error: " + ex);
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -302,7 +291,7 @@ public class PantallaProductos extends javax.swing.JFrame {
         };
 
         //Cabeceras de la tabla
-        String cabeceras[] = {"Codigo", "Nombre", "Precio unitario"};
+        String cabeceras[] = {"Id", "Codigo", "Nombre", "Precio unitario"};
         modeloTabla.setColumnIdentifiers(cabeceras);
 
         List<Producto> listaProductos = control.cargarTablaProductos();
@@ -311,7 +300,7 @@ public class PantallaProductos extends javax.swing.JFrame {
 
             for (Producto p : listaProductos) {
 
-                Object itemsTabla[] = {p.getCodigo(), p.getNombre(), p.getPrecioUnitario()};
+                Object itemsTabla[] = {p.getId(), p.getCodigo(), p.getNombre(), p.getPrecioUnitario()};
                 modeloTabla.addRow(itemsTabla);
 
             }
@@ -352,23 +341,129 @@ public class PantallaProductos extends javax.swing.JFrame {
         }
     }
 
-    private void guardarReporte() throws SQLException, InterruptedException{
-        
+    private void MenuContextual() {
+
+        JPopupMenu menuContextual = new JPopupMenu();
+        // Crear las opciones del menú
+        JMenuItem itemEditar = new JMenuItem("Actualizar Prodcuto");
+        JMenuItem itemEliminar = new JMenuItem("Eliminar Producto");
+        // Asignar acciones a cada opción
+        itemEditar.addActionListener(e -> editarProducto());
+        itemEliminar.addActionListener(e -> eliminarProducto());
+        // Agregar las opciones al menú
+        menuContextual.add(itemEditar);
+        menuContextual.addSeparator(); // Línea separadora
+        menuContextual.add(itemEliminar);
+        // Asociar el menú contextual a la tabla
+        jTable1.setComponentPopupMenu(menuContextual);
+    }
+
+    private void editarProducto() {
+        int filaSeleccionada = jTable1.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un producto primero",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        try {
+            // Obtener datos de la fila seleccionada
+            int id = (int) jTable1.getValueAt(filaSeleccionada, 0);
+            String codigo = (String) jTable1.getValueAt(filaSeleccionada, 1);
+            String nombre = (String) jTable1.getValueAt(filaSeleccionada, 2);
+            Float precio = (float) jTable1.getValueAt(filaSeleccionada, 3);
+            // Crear objeto con los datos
+            Producto producto = new Producto();
+            producto.setId(id);
+            producto.setCodigo(codigo);
+            producto.setNombre(nombre);
+            producto.setPrecioUnitario(precio);
+            // Abrir ventana de edición
+            PantallaEditarProducto ventanaEditar = new PantallaEditarProducto(producto);
+            ventanaEditar.setVisible(true);
+            ventanaEditar.setLocationRelativeTo(null);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void eliminarProducto() {
+        int filaSeleccionada = jTable1.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un producto primero",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Confirmación antes de eliminar
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de eliminar este producto?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            // Obtener datos de la fila seleccionada
+            int id = (int) jTable1.getValueAt(filaSeleccionada, 0);
+            String codigo = (String) jTable1.getValueAt(filaSeleccionada, 1);
+            String nombre = (String) jTable1.getValueAt(filaSeleccionada, 2);
+            Float precio = (float) jTable1.getValueAt(filaSeleccionada, 3);
+            // Crear objeto con los datos
+            Producto producto = new Producto();
+            producto.setId(id);
+            producto.setCodigo(codigo);
+            producto.setNombre(nombre);
+            producto.setPrecioUnitario(precio);
+            // Abrir ventana de edición
+            control.eliminarProducto(producto);
+
+        } catch (Exception ex) {
+            // Verificar si es un error de llave foránea
+            if (ex.getMessage().contains("FK_")
+                    || ex.getMessage().contains("foreign key")) {
+
+                JOptionPane.showMessageDialog(this,
+                        "No se puede eliminar este producto porque tiene ventas o registros asociados.\n"
+                        + "Por favor, elimine primero los registros relacionados.",
+                        "Error: Producto en uso",
+                        JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Error al eliminar el producto: " + ex.getMessage(),
+                        "Error de base de datos",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            ex.printStackTrace();
+        }
+    }
+
+    private void guardarReporte() throws SQLException, InterruptedException {
+
         JFileChooser fc = new JFileChooser();
         fc.setDialogTitle("Guardar como ");
         int userSelection = fc.showSaveDialog(null);
-        
-        if (userSelection == JFileChooser.APPROVE_OPTION){
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
             File f = fc.getSelectedFile();
             String ruta = f.getAbsolutePath();
-            
+
             control.generarReporte(Configuracion.RUTA_REPORTES_SALIDA + Configuracion.PLANTILLA_PRODUCTOS, Configuracion.obtenerRutaSalidaReporteUI(ruta), control.cargarTablaProductos());
 
-        } 
-        
+        }
+
         jLabel5.setText("Se guardó el reporte correctamente");
         Thread.sleep(4000);
         jLabel5.setText("");
-        
-    }       
+
+    }
 }

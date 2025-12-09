@@ -9,29 +9,35 @@ import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.poo.edu.utp.ingenieria.sistemaventas.dto.FacturaClienteDTO;
+import com.poo.edu.utp.ingenieria.sistemaventas.modelos.Factura;
+import com.poo.edu.utp.ingenieria.sistemaventas.modelos.Producto;
 import com.raven.datechooser.DateBetween;
 import com.raven.datechooser.DateChooser;
 import com.raven.datechooser.listener.DateChooserAction;
 import com.raven.datechooser.listener.DateChooserAdapter;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 
 public class PantallaFacturas extends javax.swing.JFrame {
 
     private DateChooser chDate = new DateChooser();
     Controlador control = null;
-    
+
     public PantallaFacturas() {
         control = new Controlador();
         initComponents();
+        MenuContextual();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        
+
         //Calendario desplegable
         chDate.setTextField(jTextField1);
         chDate.setDateSelectionMode(DateChooser.DateSelectionMode.BETWEEN_DATE_SELECTED);
         chDate.setLabelCurrentDayVisible(false);
         chDate.setDateFormat(new SimpleDateFormat("yyyy-MM-dd"));
-        chDate.addActionDateChooserListener(new DateChooserAdapter(){
+        chDate.addActionDateChooserListener(new DateChooserAdapter() {
             @Override
             public void dateBetweenChanged(DateBetween date, DateChooserAction action) {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -39,16 +45,14 @@ public class PantallaFacturas extends javax.swing.JFrame {
                 String toDate = df.format(date.getToDate());
                 try {
                     CargarTablaFiltrada(dateFrom, toDate);
-                }catch (SQLException ex) {
-                System.err.println("Error: " + ex);
+                } catch (SQLException ex) {
+                    System.err.println("Error: " + ex);
+                }
             }
-            } 
-            
+
         }
         );
-        
-        
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -176,10 +180,11 @@ public class PantallaFacturas extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(21, 21, 21)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 352, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -222,7 +227,7 @@ public class PantallaFacturas extends javax.swing.JFrame {
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jTextField1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField1KeyReleased
-        
+
     }//GEN-LAST:event_jTextField1KeyReleased
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -266,27 +271,27 @@ public class PantallaFacturas extends javax.swing.JFrame {
         };
 
         //Cabeceras de la tabla
-        String cabeceras[] = {"Número de factura", "Fecha", "Condicion de Pago", "Subtotal", "IGV", "Total"};
+        String cabeceras[] = {"Id", "Número de factura", "Fecha", "Condicion de Pago", "Subtotal", "IGV", "Total"};
         modeloTabla.setColumnIdentifiers(cabeceras);
-        
+
         float importeTotal = 0;
         float importeAcumulado = 0;
         DecimalFormat df = new DecimalFormat("0.00");
-        
+
         List<FacturaClienteDTO> listaFactura = control.cargarTablaFacturasPorFecha(dateFrom, toDate);
-        if (listaFactura != null){
-            
-            for (FacturaClienteDTO c : listaFactura){
-                
+        if (listaFactura != null) {
+
+            for (FacturaClienteDTO c : listaFactura) {
+
                 importeAcumulado = c.getTotal();
                 importeTotal += importeAcumulado;
-                
+
                 String totalFormatado = df.format(c.getTotal());
                 String subtotalFormateado = df.format(c.getSubtotal());
                 String igvFormateado = df.format(c.getIgv());
-                Object itemsTabla[] = {c.getNroFactura(), c.getFecha(), c.getCondicionPago(), subtotalFormateado, igvFormateado, totalFormatado}; 
+                Object itemsTabla[] = {c.getId(), c.getNroFactura(), c.getFecha(), c.getCondicionPago(), subtotalFormateado, igvFormateado, totalFormatado};
                 modeloTabla.addRow(itemsTabla);
-                
+
             }
             String importeTotalFormateado = df.format(importeTotal);
             jTable1.setModel(modeloTabla);
@@ -307,32 +312,97 @@ public class PantallaFacturas extends javax.swing.JFrame {
         };
 
         //Cabeceras de la tabla
-        String cabeceras[] = {"Número de factura", "Fecha", "Condicion de Pago", "Subtotal", "IGV", "Total"};
+        String cabeceras[] = {"Id", "Número de factura", "Fecha", "Condicion de Pago", "Subtotal", "IGV", "Total"};
         modeloTabla.setColumnIdentifiers(cabeceras);
-        
+
         float importeTotal = 0;
         float importeAcumulado = 0;
         DecimalFormat df = new DecimalFormat("0.00");
-        
+
         List<FacturaClienteDTO> listaFactura = control.cargarTablaFacturas();
-        if (listaFactura != null){
-            
-            for (FacturaClienteDTO c : listaFactura){
-                
+        if (listaFactura != null) {
+
+            for (FacturaClienteDTO c : listaFactura) {
+
                 importeAcumulado = c.getTotal();
                 importeTotal += importeAcumulado;
-                
+
                 String totalFormatado = df.format(c.getTotal());
                 String subtotalFormateado = df.format(c.getSubtotal());
                 String igvFormateado = df.format(c.getIgv());
-                Object itemsTabla[] = {c.getNroFactura(), c.getFecha(), c.getCondicionPago(), subtotalFormateado, igvFormateado, totalFormatado}; 
+                Object itemsTabla[] = {c.getId(), c.getNroFactura(), c.getFecha(), c.getCondicionPago(), subtotalFormateado, igvFormateado, totalFormatado};
                 modeloTabla.addRow(itemsTabla);
-                
+
             }
             String importeTotalFormateado = df.format(importeTotal);
             jTable1.setModel(modeloTabla);
             jLabel3.setText("Monto total: S/." + importeTotalFormateado);
 
         }
+    }
+
+    private void MenuContextual() {
+
+        JPopupMenu menuContextual = new JPopupMenu();
+        // Crear las opciones del menú
+        JMenuItem itemEliminar = new JMenuItem("Eliminar Factura");
+        // Asignar acciones a cada opción
+        itemEliminar.addActionListener(e -> eliminarFactura());
+        // Agregar las opciones al menú
+        menuContextual.add(itemEliminar);
+        // Asociar el menú contextual a la tabla
+        jTable1.setComponentPopupMenu(menuContextual);
+    }
+
+    private void eliminarFactura() {
+
+        int filaSeleccionada = jTable1.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione una factura primero",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Obtener datos de la factura
+        int id = (int) jTable1.getValueAt(filaSeleccionada, 0); // Columna oculta ID
+        String nroFactura = (String) jTable1.getValueAt(filaSeleccionada, 1); // Ahora es columna 1
+
+        // Confirmación antes de eliminar
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de eliminar la factura " + nroFactura + "?\n"
+                + "Esta acción eliminará la factura y todos sus detalles asociados.",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            // Crear objeto Factura con el ID
+            Factura factura = new Factura();
+            factura.setId(id);
+            factura.setNumeroFactura(nroFactura);
+
+            // Llamar al controlador para eliminar
+            control.eliminarFactura(factura);
+
+            // Ventana emergente de confirmación
+            JOptionPane.showMessageDialog(this,
+                    "Factura eliminada exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+            // Actualizar tabla
+            CargarTabla();
+
+        } catch (SQLException ex) {
+            String mensajeError = ex.getMessage();
+        }
+
     }
 }

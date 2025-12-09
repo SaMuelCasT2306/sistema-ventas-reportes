@@ -6,15 +6,19 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.table.DefaultTableModel;
 
 public class PantallaClientes extends javax.swing.JFrame {
 
     Controlador control = null;
-    
+
     public PantallaClientes() {
         control = new Controlador();
         initComponents();
+        MenuContextual();
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
     }
 
@@ -154,11 +158,11 @@ public class PantallaClientes extends javax.swing.JFrame {
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         try {
-            
+
             CargarTabla();
-            
+
         } catch (SQLException ex) {
-            System.err.println("Error: " + ex);            
+            System.err.println("Error: " + ex);
         }
     }//GEN-LAST:event_formWindowOpened
 
@@ -174,11 +178,11 @@ public class PantallaClientes extends javax.swing.JFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         try {
-            
+
             CargarTabla();
-            
+
         } catch (SQLException ex) {
-            System.err.println("Error: " + ex);            
+            System.err.println("Error: " + ex);
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
@@ -207,20 +211,132 @@ public class PantallaClientes extends javax.swing.JFrame {
         };
 
         //Cabeceras de la tabla
-        String cabeceras[] = {"RUC", "Nombre", "Direccion"};
+        String cabeceras[] = {"Id", "RUC", "Nombre", "Direccion"};
         modeloTabla.setColumnIdentifiers(cabeceras);
-        
+
         List<Cliente> listaClientes = control.cargarTablaClientes();
-        if (listaClientes != null){
-            
-            for (Cliente c : listaClientes){
-               
-                Object itemsTabla[] = {c.getRuc(), c.getNombre(), c.getDireccion()}; 
+        if (listaClientes != null) {
+
+            for (Cliente c : listaClientes) {
+
+                Object itemsTabla[] = {c.getId(), c.getRuc(), c.getNombre(), c.getDireccion()};
                 modeloTabla.addRow(itemsTabla);
-                
+
             }
             jTable1.setModel(modeloTabla);
             jLabel3.setText("Cantidad de clientes: " + listaClientes.size());
+
+        }
+    }
+
+    private void MenuContextual() {
+
+        JPopupMenu menuContextual = new JPopupMenu();
+        // Crear las opciones del menú
+        JMenuItem itemEditar = new JMenuItem("Actualizar Cliente");
+        JMenuItem itemEliminar = new JMenuItem("Eliminar Cliente");
+        // Asignar acciones a cada opción
+        itemEditar.addActionListener(e -> editarCliente());
+        itemEliminar.addActionListener(e -> eliminarCliente());
+        // Agregar las opciones al menú
+        menuContextual.add(itemEditar);
+        menuContextual.addSeparator(); // Línea separadora
+        menuContextual.add(itemEliminar);
+        // Asociar el menú contextual a la tabla
+        jTable1.setComponentPopupMenu(menuContextual);
+    }
+
+    private void editarCliente() {
+        int filaSeleccionada = jTable1.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un cliente primero",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        try {
+            // Obtener datos de la fila seleccionada
+            int id = (int) jTable1.getValueAt(filaSeleccionada, 0);
+            long ruc = (long) jTable1.getValueAt(filaSeleccionada, 1);
+            String nombre = (String) jTable1.getValueAt(filaSeleccionada, 2);
+            String direccion = (String) jTable1.getValueAt(filaSeleccionada, 3);
+            // Crear objeto con los datos
+            Cliente cliente = new Cliente();
+            cliente.setId(id);
+            cliente.setRuc(ruc);
+            cliente.setNombre(nombre);
+            cliente.setDireccion(direccion);
+            // Abrir ventana de edición
+            PantallaEditarCliente ventanaEditar = new PantallaEditarCliente(cliente);
+            ventanaEditar.setVisible(true);
+            ventanaEditar.setLocationRelativeTo(null);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void eliminarCliente() {
+        int filaSeleccionada = jTable1.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Por favor, seleccione un cliente primero",
+                    "Advertencia",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Confirmación antes de eliminar
+        int confirmacion = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de eliminar este cliente?",
+                "Confirmar eliminación",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        if (confirmacion != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        try {
+            // Obtener datos de la fila seleccionada
+            int id = (int) jTable1.getValueAt(filaSeleccionada, 0);
+            long ruc = (long) jTable1.getValueAt(filaSeleccionada, 1);
+            String nombre = (String) jTable1.getValueAt(filaSeleccionada, 2);
+            String direccion = (String) jTable1.getValueAt(filaSeleccionada, 3);
+            // Crear objeto con los datos
+            Cliente cliente = new Cliente();
+            cliente.setId(id);
+            cliente.setRuc(ruc);
+            cliente.setNombre(nombre);
+            cliente.setDireccion(direccion);
+            // Llamar al controlador
+            control.eliminarCliente(cliente);
+            //Ventana emergente de confirmación
+            JOptionPane.showMessageDialog(this,
+                    "Cliente eliminado exitosamente",
+                    "Éxito",
+                    JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex) {
+            // Verificar si es un error de llave foránea
+            if (ex.getMessage().contains("FK_")
+                    || ex.getMessage().contains("foreign key")) {
+
+                JOptionPane.showMessageDialog(this,
+                        "No se puede eliminar este cliente porque tiene ventas o registros asociados.\n"
+                        + "Por favor, elimine primero los registros relacionados.",
+                        "Error: Cliente en uso",
+                        JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Error al eliminar el cliente: " + ex.getMessage(),
+                        "Error de base de datos",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            ex.printStackTrace();
 
         }
     }

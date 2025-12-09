@@ -36,6 +36,14 @@ public class Controlador {
         cr.insertarCliente(cliente);
     }
     
+    public void actualizarCliente(Cliente cliente) throws SQLException{
+        cr.updateCliente(cliente);
+    }
+    
+    public void eliminarCliente(Cliente cliente) throws SQLException{
+        cr.deleteCliente(cliente);
+    }
+    
     //CONTROLADOR DE PRODUCTOS ------------------------------------------------------------------- 
     // ---> Pantalla Productos
     public List<Producto> cargarTablaProductos() throws SQLException {
@@ -51,6 +59,14 @@ public class Controlador {
 
     public void guardarProducto(Producto producto) throws SQLException {
         pr.insertarProducto(producto);
+    }
+    
+    public void actualizarProducto(Producto producto) throws SQLException {
+        pr.updateProducto(producto);
+    }
+    
+    public void eliminarProducto(Producto producto) throws SQLException {
+        pr.deleteProducto(producto);
     }
     
     // <---- Pantalla Crear Producto
@@ -77,6 +93,10 @@ public class Controlador {
     // <---- Pantalla Crear Factura
     public void guardarDetalleFactura(DetalleFactura detalle) throws SQLException {
         fr.insertarDetalle(detalle);
+    }
+    
+    public void eliminarFactura(Factura factura) throws SQLException {
+        fr.deleteFactura(factura);
     }
 
     // <---- Pantalla Crear Factura
